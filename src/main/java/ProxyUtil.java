@@ -1,5 +1,6 @@
 import org.aopalliance.aop.Advice;
 import org.aopalliance.intercept.MethodInterceptor;
+import org.springframework.aop.Advisor;
 import org.springframework.aop.aspectj.AbstractAspectJAdvice;
 import org.springframework.aop.framework.AdvisedSupport;
 import org.springframework.aop.support.DefaultIntroductionAdvisor;
@@ -22,7 +23,7 @@ public class ProxyUtil {
     /** Single-layer proxy: make {@code obj} also look like {@code iface}. */
     public static Object getAProxy(Object obj, Class<?> iface) throws Exception {
         AdvisedSupport advised = new AdvisedSupport();
-        advised.setTarget(obj);
+//        advised.setTarget(obj);
 
         // A second (inner) proxy that implements both MethodInterceptor & Advice
         AbstractAspectJAdvice ajAdvice = (AbstractAspectJAdvice) obj;
@@ -49,6 +50,23 @@ public class ProxyUtil {
                 h);
     }
 
+    public static Object getCProxy(Object obj, Class<?>[] ifaces) throws  Exception {
+        AdvisedSupport advised = new AdvisedSupport();
+//        advised.setTarget(obj);
+
+        // A second (inner) proxy that implements both MethodInterceptor & Advice
+        AbstractAspectJAdvice ajAdvice = (AbstractAspectJAdvice) obj;
+        DefaultIntroductionAdvisor advisor = new DefaultIntroductionAdvisor(
+                (Advice) getBProxy(ajAdvice,
+                        new Class[]{MethodInterceptor.class, Advice.class}));
+        advised.addAdvisor(advisor);
+
+        InvocationHandler h = newJdkDynamicAopProxy(advised);
+        return Proxy.newProxyInstance(
+                ProxyUtil.class.getClassLoader(),
+                ifaces,
+                h);
+    }
     /** Reflectively build Spring’s {@code JdkDynamicAopProxy}. */
     private static InvocationHandler newJdkDynamicAopProxy(AdvisedSupport cfg)
             throws Exception {
